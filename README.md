@@ -21,6 +21,10 @@ Example: from the project root directory run
 
 Run with `-h` for more details on other options.
 
+Markdown example:
+
+    ./bin/anki-cli --markdown --card_file docs/example-card.md
+
 
 ## File format
 

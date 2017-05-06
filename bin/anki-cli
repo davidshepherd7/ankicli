@@ -3,6 +3,7 @@
 import sys
 import argparse
 import re
+import mistune
 
 import ankicli.ankicli as ankicli
 
@@ -11,6 +12,7 @@ def parse_arguments(argv):
     parser.add_argument('--deck', default='Default', help = 'The Anki deck to use')
     parser.add_argument('--model', default='Basic', help='The model (card type) to use')
     parser.add_argument('--card_file', default='-', help='The file to read card data from, - means use stdin')
+    parser.add_argument('--markdown', action='store_true', default=False, help='Parse input as markdown')
 
     args = parser.parse_args(argv)
 
@@ -52,6 +54,10 @@ def main(argv):
 
     with stdin_or_file(args.card_file) as card_file:
         card = ankicli.parse(card_file.read())
+
+    if args.markdown:
+        for key, value in card.items():
+            card[key] = mistune.markdown(value)
 
     # For some reason I can't get addNote working, but this works fine.
     response = ankicli.anki_connect('addNotes', {
