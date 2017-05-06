@@ -36,7 +36,6 @@ For example a standard "Basic" card type would be written as:
 What is a foo?
 @Back
 A particularly vicious variety of dandelion.
-
 ```
 
 No other parsing or modification is done, so html, cloze deletions, LaTeX, etc.
