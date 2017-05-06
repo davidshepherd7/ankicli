@@ -4,6 +4,7 @@ import sys
 import argparse
 import re
 import mistune
+import requests
 
 import ankicli.ankicli as ankicli
 
@@ -38,42 +39,48 @@ def main(argv):
     # Parse cli arguments
     args = parse_arguments(argv)
 
-    version = ankicli.anki_connect('version')
-    if version < 2:
-        error('anki-cli requires anki connect version 2 or greated')
+    try:
 
-    decks = ankicli.anki_connect('deckNames')
-    if args.deck not in decks:
-        error('Bad deck name, expected one of', decks)
+        version = ankicli.anki_connect('version')
+        if version < 2:
+            error('anki-cli requires anki connect version 2 or greated')
 
-    models = ankicli.anki_connect('modelNames')
-    if args.model not in models:
-        error('Bad model name, expected one of', models)
+        decks = ankicli.anki_connect('deckNames')
+        if args.deck not in decks:
+            error('Bad deck name, expected one of', decks)
 
-    fields = ankicli.anki_connect('modelFieldNames', {'modelName': args.model})
+        models = ankicli.anki_connect('modelNames')
+        if args.model not in models:
+            error('Bad model name, expected one of', models)
 
-    with stdin_or_file(args.card_file) as card_file:
-        card = ankicli.parse(card_file.read())
+        fields = ankicli.anki_connect('modelFieldNames', {'modelName': args.model})
 
-    if args.markdown:
-        for key, value in card.items():
-            card[key] = mistune.markdown(value)
+        with stdin_or_file(args.card_file) as card_file:
+            card = ankicli.parse(card_file.read())
 
-    # For some reason I can't get addNote working, but this works fine.
-    response = ankicli.anki_connect('addNotes', {
-        'notes': [{
-            'deckName': args.deck,
-            'modelName': args.model,
-            'fields': card,
-            'tags': [],
-        }]
-    })
-    new_card_id = response[0]
+        if args.markdown:
+            for key, value in card.items():
+                card[key] = mistune.markdown(value)
 
-    if new_card_id is None:
-        error('Failed to create card, does it have unique fields?')
+        # For some reason I can't get addNote working, but this works fine.
+        response = ankicli.anki_connect('addNotes', {
+            'notes': [{
+                'deckName': args.deck,
+                'modelName': args.model,
+                'fields': card,
+                'tags': [],
+            }]
+        })
+        new_card_id = response[0]
 
-    print('Created new card with id', response[0])
+        if new_card_id is None:
+            error('Failed to create card, does it have unique fields?')
+
+        print('Created new card with id', response[0])
+
+    except requests.exceptions.ConnectionError as e:
+        error("Could not contact anki-connect. Is Anki running? Is the anki-connect plugin installed?\n\nDetails: {}".format(e))
+
 
     # Return success
     return 0
