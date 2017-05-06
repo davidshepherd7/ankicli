@@ -1,0 +1,77 @@
+#! /usr/bin/env python3
+
+import sys
+import argparse
+import re
+
+import ankicli.ankicli as ankicli
+
+def parse_arguments(argv):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--deck', default='Default', help = 'The Anki deck to use')
+    parser.add_argument('--model', default='Basic', help='The model (card type) to use')
+    parser.add_argument('--card_file', default='-', help='The file to read card data from, - means use stdin')
+
+    args = parser.parse_args(argv)
+
+    return args
+
+
+def error(*args, **kwargs):
+    print(*args, **kwargs, file=sys.stderr)
+    sys.exit(1)
+
+
+def stdin_or_file(filename):
+    if filename == '-':
+        return sys.stdin
+    else:
+        return open(filename, 'r')
+
+
+def main(argv):
+    """
+    """
+
+    # Parse cli arguments
+    args = parse_arguments(argv)
+
+    version = ankicli.anki_connect('version')
+    if version < 2:
+        error('anki-cli requires anki connect version 2 or greated')
+
+    decks = ankicli.anki_connect('deckNames')
+    if args.deck not in decks:
+        error('Bad deck name, expected one of', decks)
+
+    models = ankicli.anki_connect('modelNames')
+    if args.model not in models:
+        error('Bad model name, expected one of', models)
+
+    fields = ankicli.anki_connect('modelFieldNames', {'modelName': args.model})
+
+    with stdin_or_file(args.card_file) as card_file:
+        card = ankicli.parse(card_file.read())
+
+    # For some reason I can't get addNote working, but this works fine.
+    response = ankicli.anki_connect('addNotes', {
+        'notes': [{
+            'deckName': args.deck,
+            'modelName': args.model,
+            'fields': card,
+            'tags': [],
+        }]
+    })
+    new_card_id = response[0]
+
+    if new_card_id is None:
+        error('Failed to create card, does it have unique fields?')
+
+    print('Created new card with id', response[0])
+
+    # Return success
+    return 0
+
+# If this script is run from a shell then run main() and return the result.
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
