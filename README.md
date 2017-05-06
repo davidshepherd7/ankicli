@@ -1,4 +1,4 @@
-# Anki-cli
+# Ankicli
 
 A command line interface for managing Anki decks.
 
