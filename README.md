@@ -10,7 +10,7 @@ cards to your decks from a simple text file format.
 Requires python3 and pip already installed (e.g. `sudo apt install python3 python3-pip`)
 
 1. Install [anki-connect](https://github.com/FooSoft/anki-connect) (anki addon 2055492159) and restart Anki
-2. Run `pip3 install -r` in this directory
+2. Run `pip3 install -r requirements.txt` in this directory
 
 
 ## Usage
