@@ -7,19 +7,19 @@ cards to your decks from a simple text file format.
 
 ## Installation
 
-Requires python3 and pip already installed (e.g. `sudo apt install python3 python3-pip`)
-
-1. Install [anki-connect](https://github.com/FooSoft/anki-connect) (anki addon 2055492159) and restart Anki
-2. Run `pip3 install -r requirements.txt` in this directory
+1. Install python3 and pip (for python3), e.g. with sudo apt install python3 python3-pip`.
+2. Install [anki-connect](https://github.com/FooSoft/anki-connect) (anki addon 2055492159) and restart Anki
+3. Clone this repository
+4. Run `pip3 install -r requirements.txt` in the project root directory
 
 
 ## Usage
 
-Example:
+Example: from the project root directory run
 
     ./bin/anki-cli --card_file docs/example-card.txt
 
-run with `-h` for more details
+Run with `-h` for more details on other options.
 
 
 ## File format
