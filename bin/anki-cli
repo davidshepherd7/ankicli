@@ -74,7 +74,7 @@ def main(argv):
         new_card_id = response[0]
 
         if new_card_id is None:
-            error('Failed to create card, does it have unique fields?')
+            error('Failed to create card, does it have unique entries in the fields? Did you use the correct field names for the model?')
 
         print('Created new card with id', response[0])
 
