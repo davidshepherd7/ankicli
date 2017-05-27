@@ -44,3 +44,8 @@ A particularly vicious variety of dandelion.
 
 No other parsing or modification is done, so html, cloze deletions, LaTeX, etc.
 should all work as normal.
+
+
+## Licence
+
+The current licence is AGPLv3 because that's [what Anki uses](https://github.com/dae/anki/blob/master/LICENSE) and consistent licencing is nice. If you would like something less restrictive give me a shout.
