@@ -6,7 +6,7 @@ This is a proof-of-concept version which is only capable of adding new
 cards to your decks from a simple text file format. It is unlikely to go any further because I've moved
 to using [anki-mode](https://github.com/davidshepherd7/anki-mode) to create cards directly inside Emacs.
 
-For creating anki cards from text files on the command like, you might want to check out
+For creating anki cards from text files on the command line, you might want to check out
 [org_to_anki](https://github.com/c-okelly/org_to_anki) which seems to be more active.
 
 ## Installation
